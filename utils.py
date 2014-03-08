@@ -5,7 +5,7 @@ import sys
 import re
 from copy import copy
 from random import randint, shuffle
-from itertools import zip_longest, takewhile
+from itertools import izip_longest, takewhile
 
 sentinel = object()
 space    = ' '

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 
 """ Rescaler
@@ -46,43 +46,49 @@ sizes = [
 
 sizes = {s[0]: Container(name=s[1], size=s[2]) for s in sizes}
 
+unit_table = {
+              (None, 1e-9)       : "less than a nanometer",
+              (1e-9, 1e-6)       : "%s nanometer%s",
+              (1e-6, 1e-3)       : "%s micrometer%s",
+              (1e-3, 1e-2)       : "%s millimeter%s",
+              (1e-2, 1e+0)       : "%s centimeter%s",
+              (1e+0, 1e+3)       : "%s meter%s",
+              (1e+3, 1.5e+11)    : "%s kilometer%s",
+              (1.5e+11, 9.5e+15) : "%s AU%s",
+              (9.5e+15, None)    : "%s Light years%s",
+              }
+
 
 class Rescaler(object):
     tpl = "%-38s %s"
     msg = "If %s was the size of %s" + nl*2
 
     def rescale(self, i1, i2):
+        """Wrapper method used from command line."""
         i1, i2 = sizes[i1], sizes[i2]
-        scaled = copy(sizes)
-        ratio  = i1.size / i2.size
-        # print(ratio)
         print(self.msg % (i1.name, i2.name))
+        for name, val in self._rescale(i1, i2, sizes.values()):
+            if name:
+                print(self.tpl % (name, val))
 
-        for item in scaled.values():
+    def _rescale(self, i1, i2, items):
+        """Return rescaled name/size pairs."""
+        ratio = i1.size / i2.size
+
+        for item in items:
             if item == i1: continue
-            item.size /= ratio
-            val = self.format(item.size)
+            size = item.size / ratio
+            val  = self.format(size)
             if val:
-                print(self.tpl % (item.name, val))
+                yield item.name, val
+            else:
+                yield None, None
 
     def format(self, val):
         def fmt(val):
             plural = '' if val==1 else 's'
             val = ("%.2f" % val).rstrip('0').rstrip('.')
             return val, plural
-
-         # (10, "Light Year", 9.5e15),
-        unit_table = {
-                      (None, 1e-9)       : "less than a nanometer",
-                      (1e-9, 1e-6)       : "%s nanometer%s",
-                      (1e-6, 1e-3)       : "%s micrometer%s",
-                      (1e-3, 1e-2)       : "%s millimeter%s",
-                      (1e-2, 1e+0)       : "%s centimeter%s",
-                      (1e+0, 1e+3)       : "%s meter%s",
-                      (1e+3, 1.5e+11)    : "%s kilometer%s",
-                      (1.5e+11, 9.5e+15) : "%s AU%s",
-                      (9.5e+15, None)    : "%s Light years%s",
-                      }
 
         for (frm, to), unit in unit_table.items():
             if to and frm:
@@ -91,9 +97,8 @@ class Rescaler(object):
             else:
                 if to and val < to:
                     return None
-                    return unit
+                    # return unit
                 if frm and val >= frm:
-                    # return unit % fmt(val/1000)
                     return unit % fmt( val * (1/frm) )
 
 
