@@ -1,3 +1,4 @@
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.defaults import *
 from django.contrib import admin
 import dbindexer
@@ -20,3 +21,5 @@ urlpatterns = patterns('',
     ('^do_rescale/', 'arescaler.views.do_rescale'),
     ('^rescale/', RescaleView.as_view()),
 )
+
+urlpatterns += staticfiles_urlpatterns()
