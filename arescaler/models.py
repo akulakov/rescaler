@@ -1,5 +1,4 @@
 from django.db import models
-# from django.contrib.auth.models import User
 
 class Item(models.Model):
     name  = models.CharField(max_length=120)
@@ -8,3 +7,6 @@ class Item(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    class Meta:
+        ordering = ("size",)
