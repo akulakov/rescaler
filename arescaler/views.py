@@ -2,6 +2,7 @@ import json
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.generic.base import View
 from django.views.generic.edit import FormView
+from django.core.urlresolvers import reverse
 
 from arescaler.forms import RescaleForm
 from arescaler.models import Item
@@ -18,9 +19,6 @@ class RescaleView(FormView):
     template_name = "rescale.html"
     form_class = RescaleForm
 
-    def Xget(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        return self.render_to_response(context)
 
 def do_rescale(request):
     items = Item.objects.all()
