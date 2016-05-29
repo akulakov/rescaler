@@ -108,3 +108,5 @@ if __name__ == "__main__":
         Rescaler().rescale(int(arg[0]), int(arg[1]))
     except KeyboardInterrupt:
         pass
+    except IndexError:
+        print("Error: requires two arguments, e.g. rescaler.py 1 2  -- rescale item 1 to be the size of item 2")
