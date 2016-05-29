@@ -3,7 +3,7 @@
 
 """ Rescaler
 
-by: ak@lightbird.net
+by: andrei.avk@gmail.com
 license: (see LICENSE file)
 """
 
